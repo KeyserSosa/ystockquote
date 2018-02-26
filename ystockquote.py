@@ -27,16 +27,13 @@ except ImportError:
     # py2
     from urllib2 import Request, urlopen
     from urllib import urlencode
-    import sys
-    reload(sys)
-    sys.setdefaultencoding('utf8')
 
 
 def _request(symbol, stat):
     url = 'http://finance.yahoo.com/d/quotes.csv?s=%s&f=%s' % (symbol, stat)
     req = Request(url)
     resp = urlopen(req)
-    content = resp.read().decode().strip()
+    content = resp.read().decode().strip().encode('utf-8')
     return content
 
 
@@ -492,7 +489,7 @@ def _get_crumb_cookie(symbol):
     resp = urlopen(req)
     cookies = resp.info()['Set-Cookie']
 
-    content = str(resp.read().decode('utf-8').strip())
+    content = str(resp.read().decode('utf-8').strip().encode('utf-8'))
 
     # Matches: {'crumb':'AlphaNumeric'}
     rpat = '"CrumbStore":{"crumb":"([^"]+)"}'
